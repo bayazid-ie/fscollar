@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Phone, MapPin, User, Package, CheckCircle } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import productImage1 from "@/assets/product-1.jpg";
 
 const OrderForm = () => {
@@ -24,7 +25,7 @@ const OrderForm = () => {
   const subtotal = unitPrice * quantity;
   const total = subtotal + deliveryCharge;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.name || !formData.phone || !formData.address) {
@@ -34,6 +35,25 @@ const OrderForm = () => {
 
     setIsSubmitting(true);
     
+    // Save order to database
+    const { error } = await supabase.from("orders").insert({
+      name: formData.name,
+      phone: formData.phone,
+      address: formData.address,
+      quantity: quantity,
+      notes: formData.notes || null,
+      unit_price: unitPrice,
+      delivery_charge: deliveryCharge,
+      total: total,
+    });
+
+    if (error) {
+      console.error("Order error:", error);
+      toast.error("অর্ডার সাবমিট করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+      setIsSubmitting(false);
+      return;
+    }
+
     // Create WhatsApp message
     const message = `🛒 *নতুন অর্ডার - Anti Flea Cat Collar*
 
@@ -50,11 +70,21 @@ ${formData.notes ? `📝 নোট: ${formData.notes}` : ''}
 
     const whatsappUrl = `https://wa.me/8801XXXXXXXXX?text=${encodeURIComponent(message)}`;
     
-    setTimeout(() => {
-      setIsSubmitting(false);
-      toast.success("অর্ডার প্রসেস হচ্ছে! WhatsApp এ নিশ্চিত করুন।");
-      window.open(whatsappUrl, '_blank');
-    }, 1000);
+    toast.success("অর্ডার সফলভাবে সাবমিট হয়েছে! 🎉");
+    
+    // Reset form
+    setFormData({
+      name: "",
+      phone: "",
+      address: "",
+      quantity: "1",
+      notes: "",
+    });
+    
+    setIsSubmitting(false);
+    
+    // Open WhatsApp
+    window.open(whatsappUrl, '_blank');
   };
 
   return (
@@ -106,8 +136,8 @@ ${formData.notes ? `📝 নোট: ${formData.notes}` : ''}
               </div>
             </div>
 
-            <div className="mt-6 p-4 bg-green-500/10 border border-green-500/30 rounded-xl">
-              <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
+            <div className="mt-6 p-4 bg-primary/10 border border-primary/30 rounded-xl">
+              <div className="flex items-center gap-2 text-primary">
                 <CheckCircle className="w-5 h-5" />
                 <span className="font-medium">ক্যাশ অন ডেলিভারি</span>
               </div>
