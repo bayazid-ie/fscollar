@@ -9,10 +9,12 @@ import { Lock, Mail, ArrowLeft } from "lucide-react";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
-  const { signIn, isLoading } = useAuth();
+  const { signIn, signUp, isLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,8 +24,28 @@ const AdminLogin = () => {
       return;
     }
 
+    if (isSignUp && !fullName) {
+      toast.error("Please enter your full name");
+      return;
+    }
+
     setIsSubmitting(true);
     
+    if (isSignUp) {
+      const { error } = await signUp(email, password, fullName);
+      
+      if (error) {
+        toast.error(error.message || "Sign up failed");
+        setIsSubmitting(false);
+        return;
+      }
+
+      toast.success("Account created! You can now sign in.");
+      setIsSignUp(false);
+      setIsSubmitting(false);
+      return;
+    }
+
     const { error } = await signIn(email, password);
     
     if (error) {
@@ -53,11 +75,30 @@ const AdminLogin = () => {
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
               <Lock className="w-8 h-8 text-primary" />
             </div>
-            <h1 className="text-2xl font-bold">Admin Login</h1>
-            <p className="text-muted-foreground mt-2">Sign in to manage orders</p>
+            <h1 className="text-2xl font-bold">{isSignUp ? "Admin Sign Up" : "Admin Login"}</h1>
+            <p className="text-muted-foreground mt-2">
+              {isSignUp ? "Create an admin account" : "Sign in to manage orders"}
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
+            {isSignUp && (
+              <div>
+                <Label htmlFor="fullName" className="flex items-center gap-2 mb-2">
+                  Full Name
+                </Label>
+                <Input 
+                  id="fullName"
+                  type="text"
+                  placeholder="Your full name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  className="h-12"
+                  disabled={isSubmitting || isLoading}
+                />
+              </div>
+            )}
+
             <div>
               <Label htmlFor="email" className="flex items-center gap-2 mb-2">
                 <Mail className="w-4 h-4 text-primary" />
@@ -96,8 +137,23 @@ const AdminLogin = () => {
               size="lg"
               className="w-full btn-gradient text-primary-foreground py-6"
             >
-              {isSubmitting ? "Signing in..." : "Sign In"}
+              {isSubmitting 
+                ? (isSignUp ? "Creating account..." : "Signing in...") 
+                : (isSignUp ? "Sign Up" : "Sign In")}
             </Button>
+
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={() => setIsSignUp(!isSignUp)}
+                className="text-sm text-primary hover:underline"
+                disabled={isSubmitting}
+              >
+                {isSignUp 
+                  ? "Already have an account? Sign In" 
+                  : "Need an account? Sign Up"}
+              </button>
+            </div>
           </form>
         </div>
       </div>
