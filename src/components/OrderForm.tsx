@@ -3,25 +3,31 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
-import { Phone, MapPin, User, Package, CheckCircle } from "lucide-react";
+import { Phone, MapPin, User, Package, CheckCircle, CreditCard, Wallet } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import productImage1 from "@/assets/product-1.jpg";
+
+const CONTACT_NUMBER = "01741037905";
+const BKASH_NAGAD_NUMBER = "01741037905";
 
 const OrderForm = () => {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     address: "",
-    quantity: "1",
+    quantity: 1,
     notes: "",
+    paymentMethod: "cod",
+    paymentPhone: "",
+    paymentTrxId: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const unitPrice = 520;
   const deliveryCharge = 60;
-  const quantity = parseInt(formData.quantity);
+  const quantity = formData.quantity;
   const subtotal = unitPrice * quantity;
   const total = subtotal + deliveryCharge;
 
@@ -31,6 +37,18 @@ const OrderForm = () => {
     if (!formData.name || !formData.phone || !formData.address) {
       toast.error("অনুগ্রহ করে সব তথ্য পূরণ করুন");
       return;
+    }
+
+    if (formData.quantity < 1) {
+      toast.error("পরিমাণ কমপক্ষে ১ হতে হবে");
+      return;
+    }
+
+    if (formData.paymentMethod !== "cod") {
+      if (!formData.paymentPhone || !formData.paymentTrxId) {
+        toast.error("অনুগ্রহ করে পেমেন্ট নম্বর এবং TrxID দিন");
+        return;
+      }
     }
 
     setIsSubmitting(true);
@@ -45,6 +63,9 @@ const OrderForm = () => {
       unit_price: unitPrice,
       delivery_charge: deliveryCharge,
       total: total,
+      payment_method: formData.paymentMethod,
+      payment_phone: formData.paymentMethod !== "cod" ? formData.paymentPhone : null,
+      payment_trxid: formData.paymentMethod !== "cod" ? formData.paymentTrxId : null,
     });
 
     if (error) {
@@ -54,37 +75,21 @@ const OrderForm = () => {
       return;
     }
 
-    // Create WhatsApp message
-    const message = `🛒 *নতুন অর্ডার - Anti Flea Cat Collar*
-
-👤 নাম: ${formData.name}
-📞 ফোন: ${formData.phone}
-📍 ঠিকানা: ${formData.address}
-📦 পরিমাণ: ${formData.quantity}টি
-${formData.notes ? `📝 নোট: ${formData.notes}` : ''}
-
-💰 মূল্য: ৳${subtotal}
-🚚 ডেলিভারি: ৳${deliveryCharge}
-━━━━━━━━━━━
-✅ সর্বমোট: ৳${total}`;
-
-    const whatsappUrl = `https://wa.me/8801XXXXXXXXX?text=${encodeURIComponent(message)}`;
-    
-    toast.success("অর্ডার সফলভাবে সাবমিট হয়েছে! 🎉");
+    toast.success("অর্ডার সফলভাবে সাবমিট হয়েছে! 🎉 আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।");
     
     // Reset form
     setFormData({
       name: "",
       phone: "",
       address: "",
-      quantity: "1",
+      quantity: 1,
       notes: "",
+      paymentMethod: "cod",
+      paymentPhone: "",
+      paymentTrxId: "",
     });
     
     setIsSubmitting(false);
-    
-    // Open WhatsApp
-    window.open(whatsappUrl, '_blank');
   };
 
   return (
@@ -94,7 +99,7 @@ ${formData.notes ? `📝 নোট: ${formData.notes}` : ''}
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             এখনই <span className="text-gradient">অর্ডার করুন</span>
           </h2>
-          <p className="text-muted-foreground text-lg">ক্যাশ অন ডেলিভারি - পণ্য হাতে পেয়ে পেমেন্ট করুন</p>
+          <p className="text-muted-foreground text-lg">ক্যাশ অন ডেলিভারি অথবা অ্যাডভান্স পেমেন্ট</p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
@@ -139,9 +144,9 @@ ${formData.notes ? `📝 নোট: ${formData.notes}` : ''}
             <div className="mt-6 p-4 bg-primary/10 border border-primary/30 rounded-xl">
               <div className="flex items-center gap-2 text-primary">
                 <CheckCircle className="w-5 h-5" />
-                <span className="font-medium">ক্যাশ অন ডেলিভারি</span>
+                <span className="font-medium">নিরাপদ পেমেন্ট</span>
               </div>
-              <p className="text-sm text-muted-foreground mt-1">পণ্য হাতে পেয়ে পেমেন্ট করুন</p>
+              <p className="text-sm text-muted-foreground mt-1">ক্যাশ অন ডেলিভারি বা bKash/Nagad এ অ্যাডভান্স</p>
             </div>
           </div>
 
@@ -198,21 +203,91 @@ ${formData.notes ? `📝 নোট: ${formData.notes}` : ''}
                   <Package className="w-4 h-4 text-primary" />
                   পরিমাণ
                 </Label>
-                <Select 
-                  value={formData.quantity} 
-                  onValueChange={(value) => setFormData({...formData, quantity: value})}
-                >
-                  <SelectTrigger className="h-12">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="1">১টি - ৳৫২০</SelectItem>
-                    <SelectItem value="2">২টি - ৳১,০৪০</SelectItem>
-                    <SelectItem value="3">৩টি - ৳১,৫৬০</SelectItem>
-                    <SelectItem value="5">৫টি - ৳২,৬০০</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Input 
+                  id="quantity"
+                  type="number"
+                  min="1"
+                  placeholder="1"
+                  value={formData.quantity}
+                  onChange={(e) => setFormData({...formData, quantity: parseInt(e.target.value) || 1})}
+                  className="h-12"
+                />
               </div>
+
+              {/* Payment Method */}
+              <div>
+                <Label className="flex items-center gap-2 mb-3">
+                  <Wallet className="w-4 h-4 text-primary" />
+                  পেমেন্ট মেথড *
+                </Label>
+                <RadioGroup 
+                  value={formData.paymentMethod} 
+                  onValueChange={(value) => setFormData({...formData, paymentMethod: value})}
+                  className="space-y-3"
+                >
+                  <div className="flex items-center space-x-3 p-3 border border-border rounded-lg hover:border-primary/50 transition-colors">
+                    <RadioGroupItem value="cod" id="cod" />
+                    <Label htmlFor="cod" className="flex items-center gap-2 cursor-pointer flex-1">
+                      <CreditCard className="w-4 h-4" />
+                      ক্যাশ অন ডেলিভারি
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-3 p-3 border border-border rounded-lg hover:border-primary/50 transition-colors">
+                    <RadioGroupItem value="bkash" id="bkash" />
+                    <Label htmlFor="bkash" className="cursor-pointer flex-1">
+                      <span className="font-medium text-pink-600">bKash</span> অ্যাডভান্স
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-3 p-3 border border-border rounded-lg hover:border-primary/50 transition-colors">
+                    <RadioGroupItem value="nagad" id="nagad" />
+                    <Label htmlFor="nagad" className="cursor-pointer flex-1">
+                      <span className="font-medium text-orange-600">Nagad</span> অ্যাডভান্স
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+
+              {/* bKash/Nagad Payment Details */}
+              {formData.paymentMethod !== "cod" && (
+                <div className="p-4 bg-muted/50 rounded-xl space-y-4 border border-primary/30">
+                  <div className="text-center">
+                    <p className="font-medium text-primary">
+                      {formData.paymentMethod === "bkash" ? "bKash" : "Nagad"} নম্বর: 
+                      <span className="font-bold ml-2">{BKASH_NAGAD_NUMBER}</span>
+                    </p>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      উপরের নম্বরে ৳{total} টাকা পাঠান
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="paymentPhone" className="mb-2 block">
+                      যে নম্বর থেকে পাঠিয়েছেন *
+                    </Label>
+                    <Input 
+                      id="paymentPhone"
+                      type="tel"
+                      placeholder="01XXXXXXXXX"
+                      value={formData.paymentPhone}
+                      onChange={(e) => setFormData({...formData, paymentPhone: e.target.value})}
+                      className="h-12"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="paymentTrxId" className="mb-2 block">
+                      Transaction ID (TrxID) *
+                    </Label>
+                    <Input 
+                      id="paymentTrxId"
+                      placeholder="যেমন: 8N7A2M5K1X"
+                      value={formData.paymentTrxId}
+                      onChange={(e) => setFormData({...formData, paymentTrxId: e.target.value})}
+                      className="h-12"
+                    />
+                  </div>
+                </div>
+              )}
 
               <div>
                 <Label htmlFor="notes" className="mb-2 block">অতিরিক্ত নোট (ঐচ্ছিক)</Label>
@@ -231,7 +306,7 @@ ${formData.notes ? `📝 নোট: ${formData.notes}` : ''}
                 size="lg"
                 className="w-full btn-gradient text-primary-foreground text-xl py-7 rounded-xl shadow-xl hover:shadow-primary/30 hover:scale-[1.02] transition-all duration-300"
               >
-                {isSubmitting ? "প্রসেসিং..." : "অর্ডার কনফার্ম করুন 🛒"}
+                {isSubmitting ? "প্রসেসিং..." : "অর্ডার কনফার্ম করুন ✓"}
               </Button>
             </div>
           </form>

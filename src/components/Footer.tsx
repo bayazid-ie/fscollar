@@ -1,5 +1,7 @@
 import { Phone, MessageCircle, Mail, MapPin } from "lucide-react";
 
+const CONTACT_NUMBER = "01741037905";
+
 const Footer = () => {
   return (
     <footer className="bg-foreground text-background py-12">
@@ -18,21 +20,21 @@ const Footer = () => {
             <h4 className="text-lg font-bold mb-4">যোগাযোগ</h4>
             <ul className="space-y-3">
               <li>
-                <a href="tel:+8801XXXXXXXXX" className="flex items-center gap-2 hover:text-primary transition-colors">
+                <a href={`tel:+880${CONTACT_NUMBER}`} className="flex items-center gap-2 hover:text-primary transition-colors">
                   <Phone className="w-5 h-5" />
-                  +880 1XXX-XXXXXX
+                  +880 {CONTACT_NUMBER.slice(0, 5)}-{CONTACT_NUMBER.slice(5)}
                 </a>
               </li>
               <li>
-                <a href="https://wa.me/8801XXXXXXXXX" className="flex items-center gap-2 hover:text-primary transition-colors">
+                <a href={`https://wa.me/880${CONTACT_NUMBER}`} className="flex items-center gap-2 hover:text-primary transition-colors">
                   <MessageCircle className="w-5 h-5" />
                   WhatsApp
                 </a>
               </li>
               <li>
-                <a href="mailto:info@example.com" className="flex items-center gap-2 hover:text-primary transition-colors">
+                <a href="mailto:furryshack.shop@gmail.com" className="flex items-center gap-2 hover:text-primary transition-colors">
                   <Mail className="w-5 h-5" />
-                  info@example.com
+                  furryshack.shop@gmail.com
                 </a>
               </li>
             </ul>
