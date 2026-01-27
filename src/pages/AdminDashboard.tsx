@@ -157,7 +157,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Orders Table */}
-        <div className="glass-card rounded-xl overflow-hidden">
+        <div className="glass-card rounded-xl overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -167,6 +167,7 @@ const AdminDashboard = () => {
                 <TableHead>Address</TableHead>
                 <TableHead>Qty</TableHead>
                 <TableHead>Total</TableHead>
+                <TableHead>Payment</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -174,13 +175,13 @@ const AdminDashboard = () => {
             <TableBody>
               {isLoadingOrders ? (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-12">
+                  <TableCell colSpan={9} className="text-center py-12">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
                   </TableCell>
                 </TableRow>
               ) : orders.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-12 text-muted-foreground">
+                  <TableCell colSpan={9} className="text-center py-12 text-muted-foreground">
                     No orders yet
                   </TableCell>
                 </TableRow>
@@ -192,9 +193,34 @@ const AdminDashboard = () => {
                     </TableCell>
                     <TableCell className="font-medium">{order.name}</TableCell>
                     <TableCell>{order.phone}</TableCell>
-                    <TableCell className="max-w-[200px] truncate">{order.address}</TableCell>
+                    <TableCell className="min-w-[200px] max-w-[300px]">
+                      <div className="whitespace-pre-wrap break-words">{order.address}</div>
+                    </TableCell>
                     <TableCell>{order.quantity}</TableCell>
                     <TableCell className="font-bold">৳{order.total}</TableCell>
+                    <TableCell>
+                      <div className="text-sm">
+                        <span className={`font-medium ${
+                          (order as any).payment_method === 'bkash' ? 'text-pink-600' : 
+                          (order as any).payment_method === 'nagad' ? 'text-orange-600' : 
+                          'text-green-600'
+                        }`}>
+                          {(order as any).payment_method === 'cod' ? 'COD' : 
+                           (order as any).payment_method === 'bkash' ? 'bKash' : 
+                           (order as any).payment_method === 'nagad' ? 'Nagad' : 'COD'}
+                        </span>
+                        {(order as any).payment_phone && (
+                          <div className="text-xs text-muted-foreground">
+                            {(order as any).payment_phone}
+                          </div>
+                        )}
+                        {(order as any).payment_trxid && (
+                          <div className="text-xs text-muted-foreground">
+                            TrxID: {(order as any).payment_trxid}
+                          </div>
+                        )}
+                      </div>
+                    </TableCell>
                     <TableCell>
                       <Select
                         value={order.status}

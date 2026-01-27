@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Phone, ShoppingCart } from "lucide-react";
 
+const CONTACT_NUMBER = "01741037905";
+
 const Header = () => {
   const scrollToOrder = () => {
     document.getElementById('order')?.scrollIntoView({ behavior: 'smooth' });
@@ -19,11 +21,11 @@ const Header = () => {
           {/* CTA */}
           <div className="flex items-center gap-3">
             <a 
-              href="tel:+8801XXXXXXXXX" 
+              href={`tel:+880${CONTACT_NUMBER}`} 
               className="hidden sm:flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
             >
               <Phone className="w-4 h-4" />
-              <span className="text-sm">01XXX-XXXXXX</span>
+              <span className="text-sm">{CONTACT_NUMBER.slice(0, 5)}-{CONTACT_NUMBER.slice(5)}</span>
             </a>
             <Button 
               onClick={scrollToOrder}
