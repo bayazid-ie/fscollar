@@ -17,7 +17,7 @@ const features = [
   {
     icon: Clock,
     title: "দীর্ঘস্থায়ী",
-    description: "একবার পরালে ৬ মাস পর্যন্ত কাজ করে",
+    description: "একবার পরালে ৮+ মাস পর্যন্ত কাজ করে",
     color: "text-secondary",
   },
   {
