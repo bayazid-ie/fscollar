@@ -37,7 +37,7 @@ const Hero = () => {
             <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
               <div className="flex items-center gap-2 bg-card px-4 py-2 rounded-full shadow-md">
                 <ShieldCheck className="w-5 h-5 text-primary" />
-                <span className="text-sm font-medium">৬ মাস সুরক্ষা</span>
+                <span className="text-sm font-medium">৮+ মাস সুরক্ষা</span>
               </div>
               <div className="flex items-center gap-2 bg-card px-4 py-2 rounded-full shadow-md">
                 <Sparkles className="w-5 h-5 text-secondary" />

@@ -11,7 +11,7 @@ const Footer = () => {
           <div>
             <h3 className="text-2xl font-bold mb-4 text-gradient">Anti Flea Cat Collar</h3>
             <p className="text-background/70">
-              আপনার প্রিয় বিড়ালের সুরক্ষায় বাংলাদেশের বিশ্বস্ত প্রোডাক্ট
+              আপনার ফারবেবির সুরক্ষা ও আরাম আমাদের লক্ষ্য 🐱
             </p>
           </div>
 
@@ -45,7 +45,7 @@ const Footer = () => {
             <h4 className="text-lg font-bold mb-4">ঠিকানা</h4>
             <p className="flex items-start gap-2 text-background/70">
               <MapPin className="w-5 h-5 mt-0.5 flex-shrink-0" />
-              ঢাকা, বাংলাদেশ
+              মিরপুর ১১, ঢাকা, বাংলাদেশ
             </p>
             <div className="mt-4 flex gap-3">
               <span className="text-2xl">🚚</span>
