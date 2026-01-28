@@ -85,7 +85,7 @@ const FAQ = () => {
             </p>
           </div>
 
-          {/* FAQ Accordion */}
+          {/* FAQ Accordion - at the end */}
           <Accordion type="single" collapsible className="glass-card p-6 rounded-2xl">
             <AccordionItem value="guarantee">
               <AccordionTrigger className="text-left">

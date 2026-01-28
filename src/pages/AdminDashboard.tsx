@@ -146,14 +146,26 @@ const AdminDashboard = () => {
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-          {(Object.keys(statusLabels) as OrderStatus[]).map((status) => (
-            <div key={status} className="glass-card p-4 rounded-xl">
-              <div className="text-2xl font-bold">
-                {orders.filter(o => o.status === status).length}
+          {(Object.keys(statusLabels) as OrderStatus[]).map((status) => {
+            const statusOrders = orders.filter(o => o.status === status);
+            const statusTotal = statusOrders.reduce((sum, o) => sum + o.total, 0);
+            return (
+              <div key={status} className={`glass-card p-4 rounded-xl border-l-4 ${
+                status === 'delivered' ? 'border-l-green-500' : 
+                status === 'pending' ? 'border-l-yellow-500' : 
+                status === 'cancelled' ? 'border-l-red-500' : 
+                status === 'shipped' ? 'border-l-purple-500' : 'border-l-blue-500'
+              }`}>
+                <div className="text-2xl font-bold">
+                  {statusOrders.length}
+                </div>
+                <div className="text-sm text-muted-foreground">{statusLabels[status]}</div>
+                <div className="text-lg font-semibold text-primary mt-1">
+                  ৳{statusTotal.toLocaleString()}
+                </div>
               </div>
-              <div className="text-sm text-muted-foreground">{statusLabels[status]}</div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Orders Table */}

@@ -203,30 +203,26 @@ const OrderForm = () => {
                   />
                 </div>
 
-                {/* Delivery Location */}
+                {/* Delivery Location - Manual Input */}
                 <div>
-                  <Label className="flex items-center gap-2 mb-3">
+                  <Label htmlFor="city" className="flex items-center gap-2 mb-2">
                     <MapPin className="w-4 h-4 text-primary" />
-                    ডেলিভারি লোকেশন *
+                    শহর/জেলা * <span className="text-xs text-muted-foreground">(ঢাকা সিটিতে ৳৭০, বাইরে ৳১২০)</span>
                   </Label>
-                  <RadioGroup 
-                    value={formData.isDhakaCity ? "dhaka" : "outside"} 
-                    onValueChange={(value) => setFormData({...formData, isDhakaCity: value === "dhaka"})}
-                    className="flex gap-4"
-                  >
-                    <div className="flex items-center space-x-2 p-3 border border-border rounded-lg hover:border-primary/50 transition-colors flex-1">
-                      <RadioGroupItem value="dhaka" id="dhaka" />
-                      <Label htmlFor="dhaka" className="cursor-pointer">
-                        ঢাকা সিটি (৳৭০)
-                      </Label>
-                    </div>
-                    <div className="flex items-center space-x-2 p-3 border border-border rounded-lg hover:border-primary/50 transition-colors flex-1">
-                      <RadioGroupItem value="outside" id="outside" />
-                      <Label htmlFor="outside" className="cursor-pointer">
-                        ঢাকার বাইরে (৳১২০)
-                      </Label>
-                    </div>
-                  </RadioGroup>
+                  <Input 
+                    id="city"
+                    placeholder="যেমন: ঢাকা, চট্টগ্রাম, রাজশাহী"
+                    onChange={(e) => {
+                      const city = e.target.value.toLowerCase();
+                      const isDhaka = city.includes("ঢাকা") || city.includes("dhaka");
+                      setFormData({...formData, isDhakaCity: isDhaka});
+                    }}
+                    className="h-12"
+                    required
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    ডেলিভারি চার্জ: <span className="font-medium text-primary">৳{deliveryCharge}</span> ({formData.isDhakaCity ? "ঢাকা সিটি" : "ঢাকার বাইরে"})
+                  </p>
                 </div>
 
                 <div>
@@ -266,13 +262,13 @@ const OrderForm = () => {
                     <div className="flex items-center space-x-3 p-3 border border-border rounded-lg hover:border-primary/50 transition-colors">
                       <RadioGroupItem value="bkash" id="bkash" />
                       <Label htmlFor="bkash" className="cursor-pointer flex-1">
-                        <span className="font-medium text-pink-600">bKash</span> অ্যাডভান্স
+                        <span className="font-medium text-pink-600">bKash</span>
                       </Label>
                     </div>
                     <div className="flex items-center space-x-3 p-3 border border-border rounded-lg hover:border-primary/50 transition-colors">
                       <RadioGroupItem value="nagad" id="nagad" />
                       <Label htmlFor="nagad" className="cursor-pointer flex-1">
-                        <span className="font-medium text-orange-600">Nagad</span> অ্যাডভান্স
+                        <span className="font-medium text-orange-600">Nagad</span>
                       </Label>
                     </div>
                   </RadioGroup>
