@@ -28,11 +28,11 @@ const OrderForm = () => {
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [lastOrderIsDhaka, setLastOrderIsDhaka] = useState(true);
 
-  const unitPrice = 520;
-  const deliveryCharge = formData.isDhakaCity ? 70 : 120;
+  const unitPrice = 460;
+  const deliveryCharge = 0; // Free delivery
   const quantity = formData.quantity;
   const subtotal = unitPrice * quantity;
-  const total = subtotal + deliveryCharge;
+  const total = subtotal;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,8 +120,8 @@ const OrderForm = () => {
                   <h4 className="font-bold text-lg">Anti Flea Cat Collar</h4>
                   <p className="text-muted-foreground text-sm">এসেনশিয়াল অয়েল কলার</p>
                   <div className="flex items-center gap-2 mt-2">
-                    <span className="text-sm line-through text-muted-foreground">৳৫৮০</span>
-                    <span className="text-xl font-bold text-primary">৳৫২০</span>
+                    <span className="text-sm line-through text-muted-foreground">৳৬২০</span>
+                    <span className="text-xl font-bold text-primary">৳৪৬০</span>
                   </div>
                 </div>
               </div>
@@ -132,10 +132,8 @@ const OrderForm = () => {
                   <span className="font-medium">৳{subtotal}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">
-                    ডেলিভারি চার্জ ({formData.isDhakaCity ? "ঢাকা সিটি" : "ঢাকার বাইরে"})
-                  </span>
-                  <span className="font-medium">৳{deliveryCharge}</span>
+                  <span className="text-muted-foreground">ডেলিভারি চার্জ</span>
+                  <span className="font-medium text-green-600">ফ্রি! 🎉</span>
                 </div>
                 <div className="flex justify-between text-xl font-bold border-t border-border pt-3">
                   <span>সর্বমোট</span>
@@ -203,27 +201,6 @@ const OrderForm = () => {
                   />
                 </div>
 
-                {/* Delivery Location - Manual Input */}
-                <div>
-                  <Label htmlFor="city" className="flex items-center gap-2 mb-2">
-                    <MapPin className="w-4 h-4 text-primary" />
-                    শহর/জেলা * <span className="text-xs text-muted-foreground">(ঢাকা সিটিতে ৳৭০, বাইরে ৳১২০)</span>
-                  </Label>
-                  <Input 
-                    id="city"
-                    placeholder="যেমন: ঢাকা, চট্টগ্রাম, রাজশাহী"
-                    onChange={(e) => {
-                      const city = e.target.value.toLowerCase();
-                      const isDhaka = city.includes("ঢাকা") || city.includes("dhaka");
-                      setFormData({...formData, isDhakaCity: isDhaka});
-                    }}
-                    className="h-12"
-                    required
-                  />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    ডেলিভারি চার্জ: <span className="font-medium text-primary">৳{deliveryCharge}</span> ({formData.isDhakaCity ? "ঢাকা সিটি" : "ঢাকার বাইরে"})
-                  </p>
-                </div>
 
                 <div>
                   <Label htmlFor="quantity" className="flex items-center gap-2 mb-2">
@@ -261,13 +238,19 @@ const OrderForm = () => {
                     </div>
                     <div className="flex items-center space-x-3 p-3 border border-border rounded-lg hover:border-primary/50 transition-colors">
                       <RadioGroupItem value="bkash" id="bkash" />
-                      <Label htmlFor="bkash" className="cursor-pointer flex-1">
+                      <Label htmlFor="bkash" className="cursor-pointer flex-1 flex items-center gap-2">
+                        <svg viewBox="0 0 24 24" className="w-5 h-5" fill="#E2136E">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h2v-2h-2v2zm0-4h2V7h-2v6z"/>
+                        </svg>
                         <span className="font-medium text-pink-600">bKash</span>
                       </Label>
                     </div>
                     <div className="flex items-center space-x-3 p-3 border border-border rounded-lg hover:border-primary/50 transition-colors">
                       <RadioGroupItem value="nagad" id="nagad" />
-                      <Label htmlFor="nagad" className="cursor-pointer flex-1">
+                      <Label htmlFor="nagad" className="cursor-pointer flex-1 flex items-center gap-2">
+                        <svg viewBox="0 0 24 24" className="w-5 h-5" fill="#F6921E">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h2v-2h-2v2zm0-4h2V7h-2v6z"/>
+                        </svg>
                         <span className="font-medium text-orange-600">Nagad</span>
                       </Label>
                     </div>

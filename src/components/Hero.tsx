@@ -52,14 +52,14 @@ const Hero = () => {
             {/* Pricing */}
             <div className="flex items-center gap-4 justify-center lg:justify-start">
               <div className="relative">
-                <span className="text-2xl text-muted-foreground line-through">৳৫৮০</span>
+                <span className="text-2xl text-muted-foreground line-through">৳৬২০</span>
               </div>
               <div className="flex items-baseline gap-1">
-                <span className="text-5xl font-bold text-primary">৳৫২০</span>
+                <span className="text-5xl font-bold text-primary">৳৪৬০</span>
                 <span className="text-muted-foreground">মাত্র</span>
               </div>
               <Badge variant="destructive" className="animate-pulse">
-                ৬০ টাকা ছাড়!
+                ফ্রি ডেলিভারি!
               </Badge>
             </div>
 
