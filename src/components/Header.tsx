@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Phone, ShoppingCart } from "lucide-react";
-import furryshackLogo from "@/assets/furryshack-logo.png";
+import furryshackLogo from "@/assets/furryshack-logo-transparent.png";
 
 const CONTACT_NUMBER = "01741037905";
 
