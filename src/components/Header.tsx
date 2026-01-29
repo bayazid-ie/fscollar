@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Phone, ShoppingCart } from "lucide-react";
+import furryshackLogo from "@/assets/furryshack-logo.png";
 
 const CONTACT_NUMBER = "01741037905";
 
@@ -14,8 +15,8 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <span className="text-2xl">🐱</span>
-            <span className="font-bold text-lg md:text-xl text-gradient">Cat Flea Collar</span>
+            <img src={furryshackLogo} alt="FurryShack" className="h-10 w-10 object-contain" />
+            <span className="font-bold text-lg md:text-xl text-gradient">FurryShack</span>
           </div>
 
           {/* CTA */}
