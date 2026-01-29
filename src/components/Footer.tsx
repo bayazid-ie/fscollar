@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           {/* Brand */}
           <div>
-            <h3 className="text-2xl font-bold mb-4 text-gradient">Anti Flea Cat Collar</h3>
+            <h3 className="text-2xl font-bold mb-4 text-gradient">FurryShack</h3>
             <p className="text-background/70">
               আপনার ফারবেবির সুরক্ষা ও আরাম আমাদের লক্ষ্য 🐱
             </p>
@@ -55,7 +55,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-background/20 pt-8 text-center text-background/60">
-          <p>© {new Date().getFullYear()} Anti Flea Cat Collar. সর্বস্বত্ব সংরক্ষিত।</p>
+          <p>© {new Date().getFullYear()} FurryShack. সর্বস্বত্ব সংরক্ষিত।</p>
         </div>
       </div>
     </footer>

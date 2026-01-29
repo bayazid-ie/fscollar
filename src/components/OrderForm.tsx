@@ -240,14 +240,16 @@ const OrderForm = () => {
                     </div>
                     <div className="flex items-center space-x-3 p-3 border border-border rounded-lg hover:border-primary/50 transition-colors">
                       <RadioGroupItem value="bkash" id="bkash" />
-                      <Label htmlFor="bkash" className="cursor-pointer flex-1 flex items-center gap-2">
-                        <img src={bkashLogo} alt="bKash" className="h-6 w-auto object-contain" />
+                      <Label htmlFor="bkash" className="cursor-pointer flex-1 flex items-center gap-3">
+                        <img src={bkashLogo} alt="bKash" className="h-8 w-auto object-contain" />
+                        <span className="font-medium text-pink-600">bKash</span>
                       </Label>
                     </div>
                     <div className="flex items-center space-x-3 p-3 border border-border rounded-lg hover:border-primary/50 transition-colors">
                       <RadioGroupItem value="nagad" id="nagad" />
-                      <Label htmlFor="nagad" className="cursor-pointer flex-1 flex items-center gap-2">
-                        <img src={nagadLogo} alt="Nagad" className="h-6 w-auto object-contain" />
+                      <Label htmlFor="nagad" className="cursor-pointer flex-1 flex items-center gap-3">
+                        <img src={nagadLogo} alt="Nagad" className="h-8 w-auto object-contain" />
+                        <span className="font-medium text-orange-600">Nagad</span>
                       </Label>
                     </div>
                   </RadioGroup>
