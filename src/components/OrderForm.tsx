@@ -8,6 +8,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Phone, MapPin, User, Package, CheckCircle, CreditCard, Wallet, PartyPopper } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import productImage1 from "@/assets/product-1.jpg";
+import bkashLogo from "@/assets/bkash-logo.png";
+import nagadLogo from "@/assets/nagad-logo.png";
 
 const CONTACT_NUMBER = "01741037905";
 const BKASH_NAGAD_NUMBER = "01741037905";
@@ -103,8 +105,8 @@ const OrderForm = () => {
           </div>
 
           <div className="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
-            {/* Order Summary */}
-            <div className="glass-card p-8 rounded-2xl order-2 lg:order-1">
+            {/* Order Summary - shows second on mobile, first on desktop */}
+            <div className="glass-card p-8 rounded-2xl order-2 lg:order-1 hidden lg:block">
               <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
                 <Package className="w-6 h-6 text-primary" />
                 অর্ডার সামারি
@@ -150,8 +152,8 @@ const OrderForm = () => {
               </div>
             </div>
 
-            {/* Order Form */}
-            <form onSubmit={handleSubmit} className="glass-card p-8 rounded-2xl order-1 lg:order-2">
+            {/* Order Form - shows first on mobile */}
+            <form onSubmit={handleSubmit} className="glass-card p-8 rounded-2xl order-1 lg:order-2 flex flex-col">
               <h3 className="text-2xl font-bold mb-6">আপনার তথ্য দিন</h3>
 
               <div className="space-y-5">
@@ -239,19 +241,13 @@ const OrderForm = () => {
                     <div className="flex items-center space-x-3 p-3 border border-border rounded-lg hover:border-primary/50 transition-colors">
                       <RadioGroupItem value="bkash" id="bkash" />
                       <Label htmlFor="bkash" className="cursor-pointer flex-1 flex items-center gap-2">
-                        <svg viewBox="0 0 24 24" className="w-5 h-5" fill="#E2136E">
-                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h2v-2h-2v2zm0-4h2V7h-2v6z"/>
-                        </svg>
-                        <span className="font-medium text-pink-600">bKash</span>
+                        <img src={bkashLogo} alt="bKash" className="h-6 w-auto object-contain" />
                       </Label>
                     </div>
                     <div className="flex items-center space-x-3 p-3 border border-border rounded-lg hover:border-primary/50 transition-colors">
                       <RadioGroupItem value="nagad" id="nagad" />
                       <Label htmlFor="nagad" className="cursor-pointer flex-1 flex items-center gap-2">
-                        <svg viewBox="0 0 24 24" className="w-5 h-5" fill="#F6921E">
-                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h2v-2h-2v2zm0-4h2V7h-2v6z"/>
-                        </svg>
-                        <span className="font-medium text-orange-600">Nagad</span>
+                        <img src={nagadLogo} alt="Nagad" className="h-6 w-auto object-contain" />
                       </Label>
                     </div>
                   </RadioGroup>
@@ -266,7 +262,7 @@ const OrderForm = () => {
                         <span className="font-bold ml-2">{BKASH_NAGAD_NUMBER}</span>
                       </p>
                       <p className="text-sm text-muted-foreground mt-1">
-                        উপরের নম্বরে ৳{total} টাকা পাঠান
+                        উপরের নম্বরে ৳{total} টাকা সেন্ড মানি করুন
                       </p>
                     </div>
                     
@@ -310,6 +306,45 @@ const OrderForm = () => {
                     onChange={(e) => setFormData({...formData, notes: e.target.value})}
                     rows={2}
                   />
+                </div>
+
+                {/* Mobile Order Summary - shows after form on mobile only */}
+                <div className="lg:hidden glass-card p-6 rounded-2xl">
+                  <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                    <Package className="w-5 h-5 text-primary" />
+                    অর্ডার সামারি
+                  </h3>
+
+                  <div className="flex gap-4 mb-4 p-3 bg-muted/50 rounded-xl">
+                    <img 
+                      src={productImage1} 
+                      alt="Anti Flea Cat Collar"
+                      className="w-20 h-20 object-cover rounded-lg"
+                    />
+                    <div>
+                      <h4 className="font-bold">Anti Flea Cat Collar</h4>
+                      <p className="text-muted-foreground text-sm">এসেনশিয়াল অয়েল কলার</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-sm line-through text-muted-foreground">৳৬২০</span>
+                        <span className="text-lg font-bold text-primary">৳৪৬০</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 border-t border-border pt-3 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">সাবটোটাল ({quantity}টি)</span>
+                      <span className="font-medium">৳{subtotal}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">ডেলিভারি চার্জ</span>
+                      <span className="font-medium text-green-600">ফ্রি! 🎉</span>
+                    </div>
+                    <div className="flex justify-between text-lg font-bold border-t border-border pt-2">
+                      <span>সর্বমোট</span>
+                      <span className="text-primary">৳{total}</span>
+                    </div>
+                  </div>
                 </div>
 
                 <Button 
