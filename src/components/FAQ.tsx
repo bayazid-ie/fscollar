@@ -1,10 +1,4 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Leaf, Shield, HelpCircle } from "lucide-react";
+import { Leaf, Shield } from "lucide-react";
 
 const FAQ = () => {
   return (
@@ -12,84 +6,12 @@ const FAQ = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            <span className="text-gradient">FAQ</span> - সচরাচর জিজ্ঞাসা
+            <span className="text-gradient">জানুন</span> বিস্তারিত
           </h2>
-          <p className="text-muted-foreground text-lg">সাধারণ প্রশ্ন ও উত্তর</p>
+          <p className="text-muted-foreground text-lg">কেন এই কলার আপনার বিড়ালের জন্য সেরা</p>
         </div>
 
         <div className="max-w-3xl mx-auto">
-          {/* FAQ Accordion */}
-          <div className="glass-card p-6 rounded-2xl mb-8">
-            <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-              <HelpCircle className="w-6 h-6 text-primary" />
-              সাধারণ প্রশ্নাবলী
-            </h3>
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="delivery-time">
-                <AccordionTrigger className="text-left">
-                  ডেলিভারি পেতে কতদিন লাগে?
-                </AccordionTrigger>
-                <AccordionContent>
-                  ঢাকা সিটির ভেতরে ২-৩ কার্যদিবস এবং ঢাকার বাইরে ৩-৫ কার্যদিবসের মধ্যে ডেলিভারি পাবেন। অর্ডার কনফার্ম হওয়ার পর আমরা আপনার সাথে যোগাযোগ করব।
-                </AccordionContent>
-              </AccordionItem>
-              
-              <AccordionItem value="payment-method">
-                <AccordionTrigger className="text-left">
-                  কোন কোন পেমেন্ট মেথড সাপোর্ট করেন?
-                </AccordionTrigger>
-                <AccordionContent>
-                  আমরা ক্যাশ অন ডেলিভারি (COD), bKash এবং Nagad সাপোর্ট করি। bKash পেমেন্টে ৫% ক্যাশব্যাক অফার আছে!
-                </AccordionContent>
-              </AccordionItem>
-              
-              <AccordionItem value="collar-size">
-                <AccordionTrigger className="text-left">
-                  কলারের সাইজ কত? সব বিড়ালে ফিট হবে?
-                </AccordionTrigger>
-                <AccordionContent>
-                  কলারটি অ্যাডজাস্টেবল এবং বেশিরভাগ বিড়ালের জন্য উপযোগী (নেক সাইজ ২০-৩৮ সেমি)। ছোট বিড়ালছানা থেকে বড় বিড়াল সবার জন্যই কাজ করবে।
-                </AccordionContent>
-              </AccordionItem>
-              
-              <AccordionItem value="how-long-works">
-                <AccordionTrigger className="text-left">
-                  কলার কতদিন কাজ করবে?
-                </AccordionTrigger>
-                <AccordionContent>
-                  এই কলার ৮+ মাস পর্যন্ত কার্যকর থাকে। তবে বিড়াল যদি ঘন ঘন গোসল করে বা পানিতে ভেজে, তাহলে কার্যকারিতা কিছুটা কমতে পারে।
-                </AccordionContent>
-              </AccordionItem>
-              
-              <AccordionItem value="safe-for-cats">
-                <AccordionTrigger className="text-left">
-                  এটা কি বিড়ালের জন্য ১০০% সেফ?
-                </AccordionTrigger>
-                <AccordionContent>
-                  হ্যাঁ, এটি প্রাকৃতিক এসেনশিয়াল অয়েল দিয়ে তৈরি এবং কোনো ক্ষতিকর কেমিক্যাল নেই। তবে প্রথমবার ব্যবহারে ২-৩ ঘণ্টা পর চেক করুন যে বিড়ালের কোনো এলার্জি বা অস্বস্তি হচ্ছে কিনা।
-                </AccordionContent>
-              </AccordionItem>
-              
-              <AccordionItem value="return-policy">
-                <AccordionTrigger className="text-left">
-                  রিটার্ন বা এক্সচেঞ্জ পলিসি কী?
-                </AccordionTrigger>
-                <AccordionContent>
-                  প্রোডাক্টে কোনো সমস্যা থাকলে ৭ দিনের মধ্যে আমাদের জানান। আমরা এক্সচেঞ্জ বা রিফান্ডের ব্যবস্থা করব।
-                </AccordionContent>
-              </AccordionItem>
-              
-              <AccordionItem value="track-order">
-                <AccordionTrigger className="text-left">
-                  অর্ডার ট্র্যাক করব কীভাবে?
-                </AccordionTrigger>
-                <AccordionContent>
-                  অর্ডার শিপ হওয়ার পর আমরা আপনাকে ট্র্যাকিং নম্বর ও কুরিয়ারের তথ্য SMS বা WhatsApp এ পাঠাব।
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
-
           {/* Why Different Section */}
           <div className="glass-card p-6 rounded-2xl mb-8">
             <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
