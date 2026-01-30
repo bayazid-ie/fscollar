@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
 import { Phone, MapPin, User, Package, CheckCircle, CreditCard, Wallet, PartyPopper } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import productImage1 from "@/assets/product-1.jpg";
@@ -30,10 +31,12 @@ const OrderForm = () => {
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [lastOrderIsDhaka, setLastOrderIsDhaka] = useState(true);
 
-  const unitPrice = 460;
+  const unitPrice = 480;
+  const regularPrice = 650;
   const deliveryCharge = 0; // Free delivery
   const quantity = formData.quantity;
   const subtotal = unitPrice * quantity;
+  const bkashCashback = formData.paymentMethod === "bkash" ? Math.round(subtotal * 0.05) : 0;
   const total = subtotal;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -122,13 +125,13 @@ const OrderForm = () => {
                   <h4 className="font-bold text-lg">Anti Flea Cat Collar</h4>
                   <p className="text-muted-foreground text-sm">এসেনশিয়াল অয়েল কলার</p>
                   <div className="flex items-center gap-2 mt-2">
-                    <span className="text-sm line-through text-muted-foreground">৳৬২০</span>
-                    <span className="text-xl font-bold text-primary">৳৪৬০</span>
+                    <span className="text-sm line-through text-muted-foreground">৳৬৫০</span>
+                    <span className="text-xl font-bold text-primary">৳৪৮০</span>
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-3 border-t border-border pt-4">
+                <div className="space-y-3 border-t border-border pt-4">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">সাবটোটাল ({quantity}টি)</span>
                   <span className="font-medium">৳{subtotal}</span>
@@ -137,6 +140,12 @@ const OrderForm = () => {
                   <span className="text-muted-foreground">ডেলিভারি চার্জ</span>
                   <span className="font-medium text-green-600">ফ্রি! 🎉</span>
                 </div>
+                {bkashCashback > 0 && (
+                  <div className="flex justify-between text-pink-600">
+                    <span>bKash ক্যাশব্যাক (৫%)</span>
+                    <span className="font-medium">৳{bkashCashback} ফেরত!</span>
+                  </div>
+                )}
                 <div className="flex justify-between text-xl font-bold border-t border-border pt-3">
                   <span>সর্বমোট</span>
                   <span className="text-primary">৳{total}</span>
@@ -211,11 +220,22 @@ const OrderForm = () => {
                   </Label>
                   <Input 
                     id="quantity"
-                    type="number"
-                    min="1"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     placeholder="1"
-                    value={formData.quantity}
-                    onChange={(e) => setFormData({...formData, quantity: parseInt(e.target.value) || 1})}
+                    value={formData.quantity === 0 ? "" : formData.quantity}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === "") {
+                        setFormData({...formData, quantity: 0});
+                      } else {
+                        const num = parseInt(val);
+                        if (!isNaN(num) && num >= 0) {
+                          setFormData({...formData, quantity: num});
+                        }
+                      }
+                    }}
                     className="h-12"
                   />
                 </div>
@@ -241,15 +261,14 @@ const OrderForm = () => {
                     <div className="flex items-center space-x-3 p-3 border border-border rounded-lg hover:border-primary/50 transition-colors">
                       <RadioGroupItem value="bkash" id="bkash" />
                       <Label htmlFor="bkash" className="cursor-pointer flex-1 flex items-center gap-3">
-                        <img src={bkashLogo} alt="bKash" className="h-8 w-auto object-contain" />
-                        <span className="font-medium text-pink-600">bKash</span>
+                        <img src={bkashLogo} alt="bKash" className="h-10 w-auto object-contain" />
+                        <Badge className="bg-pink-100 text-pink-600 border-pink-300">৫% ক্যাশব্যাক!</Badge>
                       </Label>
                     </div>
                     <div className="flex items-center space-x-3 p-3 border border-border rounded-lg hover:border-primary/50 transition-colors">
                       <RadioGroupItem value="nagad" id="nagad" />
-                      <Label htmlFor="nagad" className="cursor-pointer flex-1 flex items-center gap-3">
-                        <img src={nagadLogo} alt="Nagad" className="h-8 w-auto object-contain" />
-                        <span className="font-medium text-orange-600">Nagad</span>
+                      <Label htmlFor="nagad" className="cursor-pointer flex-1 flex items-center gap-2">
+                        <img src={nagadLogo} alt="Nagad" className="h-10 w-auto object-contain" />
                       </Label>
                     </div>
                   </RadioGroup>
@@ -327,8 +346,8 @@ const OrderForm = () => {
                       <h4 className="font-bold">Anti Flea Cat Collar</h4>
                       <p className="text-muted-foreground text-sm">এসেনশিয়াল অয়েল কলার</p>
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="text-sm line-through text-muted-foreground">৳৬২০</span>
-                        <span className="text-lg font-bold text-primary">৳৪৬০</span>
+                        <span className="text-sm line-through text-muted-foreground">৳{regularPrice}</span>
+                        <span className="text-lg font-bold text-primary">৳{unitPrice}</span>
                       </div>
                     </div>
                   </div>
@@ -342,6 +361,12 @@ const OrderForm = () => {
                       <span className="text-muted-foreground">ডেলিভারি চার্জ</span>
                       <span className="font-medium text-green-600">ফ্রি! 🎉</span>
                     </div>
+                    {bkashCashback > 0 && (
+                      <div className="flex justify-between text-pink-600">
+                        <span>bKash ক্যাশব্যাক (৫%)</span>
+                        <span className="font-medium">৳{bkashCashback} ফেরত!</span>
+                      </div>
+                    )}
                     <div className="flex justify-between text-lg font-bold border-t border-border pt-2">
                       <span>সর্বমোট</span>
                       <span className="text-primary">৳{total}</span>
