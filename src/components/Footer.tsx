@@ -11,7 +11,7 @@ const Footer = () => {
           <div>
             <h3 className="text-2xl font-bold mb-4 text-gradient">FurryShack</h3>
             <p className="text-background/70">
-              আপনার ফারবেবির সুরক্ষা ও আরাম আমাদের লক্ষ্য 🐱
+              All Good Stuff for Pets 🐱
             </p>
           </div>
 

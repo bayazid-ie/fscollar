@@ -410,14 +410,19 @@ const OrderForm = () => {
                   <p className="text-2xl font-bold text-primary">{lastOrderId}</p>
                 </div>
               )}
-              <div className="p-4 bg-muted rounded-xl space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">ঢাকা সিটিতে:</span>
-                  <span className="font-bold text-primary">২-৩ দিন</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">ঢাকার বাইরে:</span>
-                  <span className="font-bold text-primary">৩-৫ দিন</span>
+              <div className="p-4 bg-muted rounded-xl">
+                <h4 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                  🚚 ডেলিভারি টাইম
+                </h4>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">ঢাকা সিটিতে:</span>
+                    <span className="font-bold text-primary">২-৩ দিন</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">ঢাকার বাইরে:</span>
+                    <span className="font-bold text-primary">৩-৫ দিন</span>
+                  </div>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground">
