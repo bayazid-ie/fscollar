@@ -29,7 +29,7 @@ const OrderForm = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
-  const [lastOrderIsDhaka, setLastOrderIsDhaka] = useState(true);
+  const [lastOrderId, setLastOrderId] = useState<string | null>(null);
 
   const unitPrice = 480;
   const regularPrice = 650;
@@ -58,7 +58,7 @@ const OrderForm = () => {
 
     setIsSubmitting(true);
     
-    const { error } = await supabase.from("orders").insert({
+    const { data, error } = await supabase.from("orders").insert({
       name: formData.name,
       phone: formData.phone,
       address: formData.address,
@@ -70,7 +70,7 @@ const OrderForm = () => {
       payment_method: formData.paymentMethod,
       payment_phone: formData.paymentMethod !== "cod" ? formData.paymentPhone : null,
       payment_trxid: formData.paymentMethod !== "cod" ? formData.paymentTrxId : null,
-    });
+    }).select('order_id').single();
 
     if (error) {
       console.error("Order error:", error);
@@ -78,7 +78,7 @@ const OrderForm = () => {
       return;
     }
 
-    setLastOrderIsDhaka(formData.isDhakaCity);
+    setLastOrderId(data?.order_id || null);
     setShowSuccessDialog(true);
     
     setFormData({
@@ -404,13 +404,21 @@ const OrderForm = () => {
               <p className="font-medium text-foreground">
                 ধন্যবাদ! আপনার অর্ডার সফলভাবে গ্রহণ করা হয়েছে।
               </p>
-              <div className="p-4 bg-muted rounded-xl">
-                <p className="text-primary font-bold text-xl">
-                  {lastOrderIsDhaka ? "২-৩ দিনের মধ্যে" : "৩-৪ দিনের মধ্যে"}
-                </p>
-                <p className="text-muted-foreground">
-                  {lastOrderIsDhaka ? "ঢাকা সিটিতে ডেলিভারি পাবেন" : "ঢাকার বাইরে ডেলিভারি পাবেন"}
-                </p>
+              {lastOrderId && (
+                <div className="p-3 bg-primary/10 border border-primary/30 rounded-xl">
+                  <p className="text-sm text-muted-foreground">আপনার অর্ডার আইডি</p>
+                  <p className="text-2xl font-bold text-primary">{lastOrderId}</p>
+                </div>
+              )}
+              <div className="p-4 bg-muted rounded-xl space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">ঢাকা সিটিতে:</span>
+                  <span className="font-bold text-primary">২-৩ দিন</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">ঢাকার বাইরে:</span>
+                  <span className="font-bold text-primary">৩-৫ দিন</span>
+                </div>
               </div>
               <p className="text-sm text-muted-foreground">
                 আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব। 📞

@@ -49,17 +49,10 @@ const Hero = () => {
               </div>
             </div>
 
-            {/* Pricing */}
+            {/* Free Delivery Badge */}
             <div className="flex items-center gap-4 justify-center lg:justify-start">
-              <div className="relative">
-                <span className="text-2xl text-muted-foreground line-through">৳৬৫০</span>
-              </div>
-              <div className="flex items-baseline gap-1">
-                <span className="text-5xl font-bold text-primary">৳৪৮০</span>
-                <span className="text-muted-foreground">মাত্র</span>
-              </div>
-              <Badge variant="destructive" className="animate-pulse">
-                ফ্রি ডেলিভারি!
+              <Badge variant="destructive" className="animate-pulse text-lg px-4 py-2">
+                🚚 ফ্রি ডেলিভারি!
               </Badge>
             </div>
 
