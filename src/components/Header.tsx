@@ -14,9 +14,9 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <img src={furryshackLogo} alt="FurryShack" className="h-10 w-10 object-contain" />
-            <span className="font-bold text-lg md:text-xl text-gradient">FurryShack</span>
+          <div className="flex items-center gap-3">
+            <img src={furryshackLogo} alt="FurryShack" className="h-12 w-12 object-contain" />
+            <span className="font-bold text-xl md:text-2xl text-foreground tracking-tight">FurryShack</span>
           </div>
 
           {/* CTA */}

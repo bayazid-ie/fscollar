@@ -173,6 +173,7 @@ const AdminDashboard = () => {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>Order ID</TableHead>
                 <TableHead>Date</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Phone</TableHead>
@@ -187,19 +188,22 @@ const AdminDashboard = () => {
             <TableBody>
               {isLoadingOrders ? (
                 <TableRow>
-                  <TableCell colSpan={9} className="text-center py-12">
+                  <TableCell colSpan={10} className="text-center py-12">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
                   </TableCell>
                 </TableRow>
               ) : orders.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={9} className="text-center py-12 text-muted-foreground">
+                  <TableCell colSpan={10} className="text-center py-12 text-muted-foreground">
                     No orders yet
                   </TableCell>
                 </TableRow>
               ) : (
                 orders.map((order) => (
                   <TableRow key={order.id}>
+                    <TableCell className="font-bold text-primary whitespace-nowrap">
+                      {(order as any).order_id || '-'}
+                    </TableCell>
                     <TableCell className="whitespace-nowrap">
                       {new Date(order.created_at).toLocaleDateString('bn-BD')}
                     </TableCell>

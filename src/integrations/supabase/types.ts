@@ -22,6 +22,7 @@ export type Database = {
           id: string
           name: string
           notes: string | null
+          order_id: string | null
           payment_method: string | null
           payment_phone: string | null
           payment_trxid: string | null
@@ -39,6 +40,7 @@ export type Database = {
           id?: string
           name: string
           notes?: string | null
+          order_id?: string | null
           payment_method?: string | null
           payment_phone?: string | null
           payment_trxid?: string | null
@@ -56,6 +58,7 @@ export type Database = {
           id?: string
           name?: string
           notes?: string | null
+          order_id?: string | null
           payment_method?: string | null
           payment_phone?: string | null
           payment_trxid?: string | null
