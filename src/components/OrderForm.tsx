@@ -39,41 +39,102 @@ const OrderForm = () => {
   const bkashCashback = formData.paymentMethod === "bkash" ? Math.round(subtotal * 0.05) : 0;
   const total = subtotal;
 
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+
+  // Validation helper functions
+  const validatePhone = (phone: string): boolean => {
+    return /^01[3-9][0-9]{8}$/.test(phone);
+  };
+
+  const validateName = (name: string): string | null => {
+    const trimmed = name.trim();
+    if (trimmed.length < 2) return "নাম কমপক্ষে ২ অক্ষর হতে হবে";
+    if (trimmed.length > 100) return "নাম ১০০ অক্ষরের বেশি হতে পারবে না";
+    return null;
+  };
+
+  const validateAddress = (address: string): string | null => {
+    const trimmed = address.trim();
+    if (trimmed.length < 5) return "ঠিকানা কমপক্ষে ৫ অক্ষর হতে হবে";
+    if (trimmed.length > 500) return "ঠিকানা ৫০০ অক্ষরের বেশি হতে পারবে না";
+    return null;
+  };
+
+  const validateQuantity = (qty: number): string | null => {
+    if (qty < 1) return "পরিমাণ কমপক্ষে ১ হতে হবে";
+    if (qty > 100) return "পরিমাণ ১০০ এর বেশি হতে পারবে না";
+    return null;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.phone || !formData.address) {
-      return;
+    const errors: Record<string, string> = {};
+    
+    // Validate all fields
+    const nameError = validateName(formData.name);
+    if (nameError) errors.name = nameError;
+    
+    if (!validatePhone(formData.phone)) {
+      errors.phone = "সঠিক মোবাইল নম্বর দিন (যেমন: 01712345678)";
     }
-
-    if (formData.quantity < 1) {
-      return;
-    }
+    
+    const addressError = validateAddress(formData.address);
+    if (addressError) errors.address = addressError;
+    
+    const qtyError = validateQuantity(formData.quantity);
+    if (qtyError) errors.quantity = qtyError;
 
     if (formData.paymentMethod !== "cod") {
-      if (!formData.paymentPhone || !formData.paymentTrxId) {
-        return;
+      if (!formData.paymentPhone) {
+        errors.paymentPhone = "পেমেন্ট নম্বর দিন";
+      } else if (!validatePhone(formData.paymentPhone)) {
+        errors.paymentPhone = "সঠিক মোবাইল নম্বর দিন";
+      }
+      if (!formData.paymentTrxId || formData.paymentTrxId.trim().length < 5) {
+        errors.paymentTrxId = "সঠিক Transaction ID দিন";
       }
     }
 
+    if (formData.notes && formData.notes.length > 1000) {
+      errors.notes = "নোট ১০০০ অক্ষরের বেশি হতে পারবে না";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      return;
+    }
+
+    setValidationErrors({});
     setIsSubmitting(true);
     
     const { data, error } = await supabase.from("orders").insert({
-      name: formData.name,
-      phone: formData.phone,
-      address: formData.address,
+      name: formData.name.trim(),
+      phone: formData.phone.trim(),
+      address: formData.address.trim(),
       quantity: quantity,
-      notes: formData.notes || null,
+      notes: formData.notes?.trim() || null,
       unit_price: unitPrice,
       delivery_charge: deliveryCharge,
       total: total,
       payment_method: formData.paymentMethod,
-      payment_phone: formData.paymentMethod !== "cod" ? formData.paymentPhone : null,
-      payment_trxid: formData.paymentMethod !== "cod" ? formData.paymentTrxId : null,
+      payment_phone: formData.paymentMethod !== "cod" ? formData.paymentPhone?.trim() : null,
+      payment_trxid: formData.paymentMethod !== "cod" ? formData.paymentTrxId?.trim() : null,
     }).select('order_id').single();
 
     if (error) {
-      console.error("Order error:", error);
+      // Show user-friendly error message
+      if (error.message.includes("Invalid phone")) {
+        setValidationErrors({ phone: "সঠিক মোবাইল নম্বর দিন" });
+      } else if (error.message.includes("Name")) {
+        setValidationErrors({ name: "সঠিক নাম দিন" });
+      } else if (error.message.includes("Address")) {
+        setValidationErrors({ address: "সঠিক ঠিকানা দিন" });
+      } else if (error.message.includes("Quantity")) {
+        setValidationErrors({ quantity: "সঠিক পরিমাণ দিন (১-১০০)" });
+      } else {
+        setValidationErrors({ general: "অর্ডার প্রসেস করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।" });
+      }
       setIsSubmitting(false);
       return;
     }
@@ -166,6 +227,12 @@ const OrderForm = () => {
               <h3 className="text-2xl font-bold mb-6">আপনার তথ্য দিন</h3>
 
               <div className="space-y-5">
+                {validationErrors.general && (
+                  <div className="p-3 bg-destructive/10 border border-destructive/30 rounded-lg text-destructive text-sm">
+                    {validationErrors.general}
+                  </div>
+                )}
+                
                 <div>
                   <Label htmlFor="name" className="flex items-center gap-2 mb-2">
                     <User className="w-4 h-4 text-primary" />
@@ -175,10 +242,17 @@ const OrderForm = () => {
                     id="name"
                     placeholder="আপনার পূর্ণ নাম লিখুন"
                     value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="h-12"
+                    onChange={(e) => {
+                      setFormData({...formData, name: e.target.value});
+                      if (validationErrors.name) setValidationErrors(prev => ({...prev, name: ''}));
+                    }}
+                    className={`h-12 ${validationErrors.name ? 'border-destructive' : ''}`}
                     required
+                    maxLength={100}
                   />
+                  {validationErrors.name && (
+                    <p className="text-destructive text-sm mt-1">{validationErrors.name}</p>
+                  )}
                 </div>
 
                 <div>
@@ -191,10 +265,17 @@ const OrderForm = () => {
                     type="tel"
                     placeholder="01XXXXXXXXX"
                     value={formData.phone}
-                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                    className="h-12"
+                    onChange={(e) => {
+                      setFormData({...formData, phone: e.target.value});
+                      if (validationErrors.phone) setValidationErrors(prev => ({...prev, phone: ''}));
+                    }}
+                    className={`h-12 ${validationErrors.phone ? 'border-destructive' : ''}`}
                     required
+                    maxLength={11}
                   />
+                  {validationErrors.phone && (
+                    <p className="text-destructive text-sm mt-1">{validationErrors.phone}</p>
+                  )}
                 </div>
 
                 <div>
@@ -206,10 +287,18 @@ const OrderForm = () => {
                     id="address"
                     placeholder="বাড়ি, রোড, এলাকা, শহর"
                     value={formData.address}
-                    onChange={(e) => setFormData({...formData, address: e.target.value})}
+                    onChange={(e) => {
+                      setFormData({...formData, address: e.target.value});
+                      if (validationErrors.address) setValidationErrors(prev => ({...prev, address: ''}));
+                    }}
+                    className={validationErrors.address ? 'border-destructive' : ''}
                     rows={3}
                     required
+                    maxLength={500}
                   />
+                  {validationErrors.address && (
+                    <p className="text-destructive text-sm mt-1">{validationErrors.address}</p>
+                  )}
                 </div>
 
 
@@ -231,13 +320,17 @@ const OrderForm = () => {
                         setFormData({...formData, quantity: 0});
                       } else {
                         const num = parseInt(val);
-                        if (!isNaN(num) && num >= 0) {
+                        if (!isNaN(num) && num >= 0 && num <= 100) {
                           setFormData({...formData, quantity: num});
                         }
                       }
+                      if (validationErrors.quantity) setValidationErrors(prev => ({...prev, quantity: ''}));
                     }}
-                    className="h-12"
+                    className={`h-12 ${validationErrors.quantity ? 'border-destructive' : ''}`}
                   />
+                  {validationErrors.quantity && (
+                    <p className="text-destructive text-sm mt-1">{validationErrors.quantity}</p>
+                  )}
                 </div>
 
                 {/* Payment Method */}
@@ -296,10 +389,17 @@ const OrderForm = () => {
                         type="tel"
                         placeholder="01XXXXXXXXX"
                         value={formData.paymentPhone}
-                        onChange={(e) => setFormData({...formData, paymentPhone: e.target.value})}
-                        className="h-12"
+                        onChange={(e) => {
+                          setFormData({...formData, paymentPhone: e.target.value});
+                          if (validationErrors.paymentPhone) setValidationErrors(prev => ({...prev, paymentPhone: ''}));
+                        }}
+                        className={`h-12 ${validationErrors.paymentPhone ? 'border-destructive' : ''}`}
                         required
+                        maxLength={11}
                       />
+                      {validationErrors.paymentPhone && (
+                        <p className="text-destructive text-sm mt-1">{validationErrors.paymentPhone}</p>
+                      )}
                     </div>
                     
                     <div>
@@ -310,10 +410,17 @@ const OrderForm = () => {
                         id="paymentTrxId"
                         placeholder="যেমন: 8N7A2M5K1X"
                         value={formData.paymentTrxId}
-                        onChange={(e) => setFormData({...formData, paymentTrxId: e.target.value})}
-                        className="h-12"
+                        onChange={(e) => {
+                          setFormData({...formData, paymentTrxId: e.target.value});
+                          if (validationErrors.paymentTrxId) setValidationErrors(prev => ({...prev, paymentTrxId: ''}));
+                        }}
+                        className={`h-12 ${validationErrors.paymentTrxId ? 'border-destructive' : ''}`}
                         required
+                        maxLength={50}
                       />
+                      {validationErrors.paymentTrxId && (
+                        <p className="text-destructive text-sm mt-1">{validationErrors.paymentTrxId}</p>
+                      )}
                     </div>
                   </div>
                 )}
